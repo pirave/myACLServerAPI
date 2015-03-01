@@ -5,7 +5,8 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
 // MongoDB
-mongoose.connect('mongodb://localhost/myACL')
+var database = process.env.MONGOLAB_URI || 'mongodb://localhost/myACL';
+mongoose.connect(database)
 
 // Express
 var app = express();
@@ -16,5 +17,6 @@ app.use(bodyParser.json());
 app.use('/api', require('./routes/api'))
 
 // Start server
-app.listen(3000);
-console.log('API is running is on port 3000');
+var port = process.env.PORT || 5000;
+app.listen(port);
+console.log('API is running is on port ' + port);
