@@ -15,6 +15,9 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api', require('./routes/api'))
+app.get('/', function (req, res) {
+	res.sendFile('index.html', {root:'./views'});
+});
 
 // Start server
 var port = process.env.PORT || 5000;
