@@ -81,7 +81,7 @@
 		<script type="text/javascript">
             $("#btnGetData").click(function(){
                 $("#data").slideUp("fast");
-                $("table tr").remove();
+                $("tbody tr").remove();
                 var id = $('#id').val();
                 if ($.isNumeric(id)){ 
                     getData(id);
