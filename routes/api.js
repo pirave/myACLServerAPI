@@ -15,7 +15,7 @@ User.methods([
 	},
 	{
 		method: 'post',
-		before: deleteExisitingUser
+		before: deleteExistingUser
 	}, 'put', 'delete']);
 
 User.register(router, '/users');
@@ -23,6 +23,7 @@ User.register(router, '/users');
 Progress.methods(['get',
 	{ 
       method: 'post', 
+      before: deleteExistingProgress,
       after: addProgress
     },
     {
@@ -48,10 +49,18 @@ function populateUser(req, res, next) {
   	})
 }
 
-function deleteExisitingUser (req, res, next) {
+function deleteExistingUser (req, res, next) {
 	User
     .find()
     .remove({phoneID: req.body.phoneID})
+    .exec();
+    next();
+}
+
+function deleteExistingProgress (req, res, next) {
+	Progress
+    .find()
+    .remove({phoneID: req.body.phoneID, type: req.body.type, day: req.body.day})
     .exec();
     next();
 }
