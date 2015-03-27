@@ -12,7 +12,11 @@ User.methods([
 	{
 		method: 'get',
 		after: populateUser
-	}, 'post', 'put', 'delete']);
+	},
+	{
+		method: 'post',
+		before: deleteExisitingUser
+	}, 'put', 'delete']);
 
 User.register(router, '/users');
 
@@ -42,6 +46,13 @@ function populateUser(req, res, next) {
   	User.populate(res.locals.bundle, { path: 'progress' }, function (err, user) {
 		next();
   	})
+}
+
+function deleteExisitingUser (req, res, next) {
+	User
+    .findOneAndRemove({phoneID: req.body.phoneID})
+    .exec();
+    next();
 }
 
 function deleteAll(req, res, next){
