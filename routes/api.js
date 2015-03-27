@@ -16,10 +16,14 @@ User.methods([
 
 User.register(router, '/users');
 
-Progress.methods(['get', 'delete',
+Progress.methods(['get',
 	{ 
       method: 'post', 
       after: addProgress
+    },
+    {
+    	method: 'delete',
+    	after: deleteAll
     }]);
 Progress.register(router, '/progress');
 
@@ -38,6 +42,12 @@ function populateUser(req, res, next) {
   	User.populate(res.locals.bundle, { path: 'progress' }, function (err, user) {
 		next();
   	})
+}
+
+function deleteAll(req, res, next){
+	User.remove().exec();
+	Progress.remove().exec();
+	next();
 }
 
 // Return routers
