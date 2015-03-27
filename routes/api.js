@@ -50,7 +50,8 @@ function populateUser(req, res, next) {
 
 function deleteExisitingUser (req, res, next) {
 	User
-    .findOneAndRemove({phoneID: req.body.phoneID})
+    .find()
+    .remove({phoneID: req.body.phoneID})
     .exec();
     next();
 }
