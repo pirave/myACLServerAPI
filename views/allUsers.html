@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>myACL Users</title>
+
+    <!-- Bootstrap -->
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+  </head>
+  <body>
+
+    <h1>User Data</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Phone ID</th>
+    			<th>Name</th>
+    			<th>Gender</th>
+    			<th>Age</th>
+    			<th>Surgery Type</th>
+    			<th>Surgery Date</th>
+    			<th>Create Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+		<script type="text/javascript">  
+            $.getJSON('/api/users', function(json_data){
+
+                var table_obj = $('table');
+                $.each(json_data, function(index, result){
+                     var table_row = $('<tr>', {});
+                     var phoneID = $('<td>', {html: result.phoneID});//result.yourDataAttributes
+                     var name = $('<td>', {html: result.name});
+                     var gender = $('<td>', {html: result.gender});
+                     var age = $('<td>', {html: result.age});
+                     var surgeryType = $('<td>', {html: result.surgeryType});
+                     var surgeryDate = $('<td>', {html: result.surgeryDate});
+                     var createDate = $('<td>', {html: result.createDate});
+                     table_row.append(phoneID,name,gender,age,surgeryType,surgeryDate,createDate);
+                     table_obj.append(table_row);
+                })
+
+            });
+    </script>
+  </body>
+</html>

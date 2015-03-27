@@ -9,51 +9,111 @@
     <!-- Bootstrap -->
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <style>
+        .title {
+            font-weight: bold;
+        }
+        .info {
+            margin-left: 10px;
+        } 
+    </style>
 
   </head>
   <body>
+    <div class="page-header">
+        <h1>MyACL <small>patient progress data</small></h1>
+    </div>
+    <div class="container-fluid">
 
-    <h1>User Data</h1>
-    <table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Phone ID</th>
-			<th>Name</th>
-			<th>Gender</th>
-			<th>Age</th>
-			<th>Surgery Type</th>
-			<th>Surgery Date</th>
-			<th>Create Date</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+        <div class="input-group">
+          <input id="id" type="text" class="form-control" placeholder="Search for...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" id="btnGetData">Get Data</button>
+          </span>
+        </div><!-- /input-group -->
+        <br>
+        <div id="data" style="display:none;">
 
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">User Info</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6"><span class="title">Name</span><span class="info" id="name"></span></div>
+                        <div class="col-md-6"><span class="title">PhoneID</span><span class="info" id="phoneID"></span></div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-md-6"><span class="title">Age</span><span class="info" id="age"></span></div>
+                        <div class="col-md-6"><span class="title">Gender</span><span class="info" id="gender"></span></div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-md-6"><span class="title">Surgery Type</span><span class="info" id="surgeryType"></span></div>
+                        <div class="col-md-6"><span class="title">Surgery Date</span><span class="info" id="surgeryDate"></span></div>
+                    </div> 
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Progress Data</div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                			<th>Type</th>
+                			<th>Complete</th>
+                			<th>Range of Motion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-		<script type="text/javascript">  
-    $.getJSON('/api/users', function(json_data){
+		<script type="text/javascript">
+            $("#btnGetData").click(function(){
+                $("#data").slideUp("fast");
+                $("table tr").remove();
+                var id = $('#id').val();
+                if ($.isNumeric(id)){ 
+                    getData(id);
+                }
+            });
+            function getData(id){
+                $.getJSON('/api/users', {phoneID:id},function(json_data){
+                    if (json_data.length > 0){
+                        var table_obj = $('table');
+                        $.each(json_data, function(index, result){
 
-        var table_obj = $('table');
-        $.each(json_data, function(index, result){
-             var table_row = $('<tr>', {});
-             var phoneID = $('<td>', {html: result.phoneID});//result.yourDataAttributes
-             var name = $('<td>', {html: result.name});
-             var gender = $('<td>', {html: result.gender});
-             var age = $('<td>', {html: result.age});
-             var surgeryType = $('<td>', {html: result.surgeryType});
-             var surgeryDate = $('<td>', {html: result.surgeryDate});
-             var createDate = $('<td>', {html: result.createDate});
-             table_row.append(phoneID,name,gender,age,surgeryType,surgeryDate,createDate);
-             table_obj.append(table_row);
-        })
+                             $('#phoneID').text(result.phoneID);
+                             $('#name').text(result.name);
+                             $('#gender').text(result.gender);
+                             $('#age').text(result.age);
+                             $('#surgeryType').text(result.surgeryType);
+                             $('#surgeryDate').text(result.surgeryDate);
 
-    });
+                            $.each(result.progress, function(index, progress){
+                                 var table_row = $('<tr>', {});
+                                 var date = $('<td>', {html: progress.day});
+                                 var type = $('<td>', {html: progress.type});
+                                 var complete = $('<td>', {html: progress.complete});
+                                 var rom = $('<td>', {html: progress.rangeDegree});
+                                 table_row.append(date,type,complete,rom);
+                                 table_obj.append(table_row);
+                            })
+                        })
+                        $("#data").slideDown("fast");
+                    }
+                });
+            }
     </script>
   </body>
 </html>

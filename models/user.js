@@ -2,6 +2,7 @@
 // Dependencies
 var restful = require('node-restful');
 var mongoose = restful.mongoose;
+var Schema = mongoose.Schema;
 
 // Schema
 var userSchema = new mongoose.Schema({
@@ -11,7 +12,8 @@ var userSchema = new mongoose.Schema({
 	age: Number,
 	surgeryType: String,
 	surgeryDate: Date,
-	createDate: Date
+	createDate: Date,
+	progress: [{ type: Schema.Types.ObjectId, ref: 'Progress' }]
 });
 
 // Return model
