@@ -15,7 +15,10 @@
         }
         .info {
             margin-left: 10px;
-        } 
+        }
+        .center {
+           text-align: center;   
+        }
     </style>
 
   </head>
@@ -62,8 +65,8 @@
                         <tr>
                             <th>Date</th>
                 			<th>Type</th>
-                			<th>Complete</th>
-                			<th>Range of Motion</th>
+                			<th class='center'>Complete</th>
+                			<th class='center'>Range of Motion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,6 +77,7 @@
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
@@ -102,10 +106,17 @@
 
                             $.each(result.progress, function(index, progress){
                                  var table_row = $('<tr>', {});
-                                 var date = $('<td>', {html: progress.day});
+                                 var date = $('<td>', {html: $.datepicker.formatDate('MM dd, yy', new Date(progress.day))});
                                  var type = $('<td>', {html: progress.type});
-                                 var complete = $('<td>', {html: progress.complete});
-                                 var rom = $('<td>', {html: progress.rangeDegree});
+                                 if (progress.complete){
+                                    var complete = '<td class="center"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>';
+                                } else {
+                                    var complete = '<td></td>';
+                                }
+                                 if (progress.rangeDegree > 0)
+                                    var rom = '<td class="center">' + progress.rangeDegree + "</td>";
+                                 else
+                                    var rom = '<td></td>'
                                  table_row.append(date,type,complete,rom);
                                  table_obj.append(table_row);
                             })
